@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNpsformTable extends Migration
+class CreateNpsCodeKeyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateNpsformTable extends Migration
      */
     public function up()
     {
-        Schema::create('nps_forms', function (Blueprint $table) {
+        Schema::create('nps_code_keys', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('title');
-            $table->string('question');
+            $table->integer('nps_form_id')->unsigned();
+            $table->string('nps_code_key');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateNpsformTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nps_forms');
+        Schema::dropIfExists('nps_code_keys');
     }
 }

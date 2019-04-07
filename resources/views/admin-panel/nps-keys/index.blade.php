@@ -1,18 +1,18 @@
 @extends('layouts.admin')
-@section('title', 'NPS')
+@section('title', 'NPS Keys')
 @section('content')
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title"><b>NPS Forms</b></h3>
+                    <h3 class="box-title"><b>NPS KEYS</b></h3>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-2 pull-right">
-                              <a href="{{route("nps-forms.create")}}">
+                              <a href="{{route("nps-key.create")}}">
                                   <button type="button" class="btn btn-block btn-primary">Add</button>
                               </a>
                         </div>
@@ -23,18 +23,18 @@
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Title</th>
-                                <th>Question</th>
+                                <th>Generated On</th>
+                                <th>Nps form Title</th>
+                                <th>Keys</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if(count($npsForms) > 0 )
-                                @foreach($npsForms as $key=>$npsForm)
+                            @if(count($npsKeys) > 0 )
+                                @foreach($npsKeys as $key=>$npsKey)
                                     <tr>
-                                        <td>{{ date('d-m-y', strtotime($npsForm->created_at)) }}</td>
-                                        <td>{{ $npsForm->title }}</td>
-                                        <td>{{ $npsForm->question }}</td>
+                                        <td>{{ date('d-m-y', strtotime($npsKey->created_at)) }}</td>
+                                        <td>{{ $npsKey->nps_form->title }}</td>
+                                        <td>{{ $npsKey->nps_code_key }}</td>
                                     </tr>
                                 @endforeach
                             @else

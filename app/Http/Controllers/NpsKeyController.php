@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\NpsKey;
 use App\NpsForms;
 
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class NpsFormsController extends Controller
+class NpsKeyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +18,8 @@ class NpsFormsController extends Controller
      */
     public function index()
     {
-        $npsForms  = NpsForms::where('user_id', Auth::id())->get();
-        return view('admin-panel.nps.index', compact('npsForms'));
+        $npsKeys  = NpsKey::where('user_id', Auth::id())->with('nps_form')->get();
+        return view('admin-panel.nps-keys.index', compact('npsKeys'));
     }
 
     /**
@@ -28,7 +29,8 @@ class NpsFormsController extends Controller
      */
     public function create()
     {
-        return view('admin-panel.nps.create');
+        $npsForms  = NpsForms::where('user_id', Auth::id())->pluck('title','id');
+        return view('admin-panel.nps-keys.create', compact('npsForms'));
     }
 
     /**
@@ -40,35 +42,34 @@ class NpsFormsController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'title'     => 'required|max:255',
-            'question'     => 'required|max:255'
+            'nps_form'     => 'required|unique:nps_code_keys,nps_form_id, 0 ,id,user_id,'.Auth::id()
             ];
-        $messages = [
-                'title.required'     => 'Please enter a title.',
-                'question.required'     => 'Please enter a question.'
-            ];
-        $validator = Validator::make($request->all(), $rules,$messages);
+
+        $validator = Validator::make($request->all(), $rules,[
+            "nps_form.unique" => "Key is already generated for this Nps form."
+        ]);
         if($validator->fails()){
             return back()->withErrors($validator)->withInput();
         }else{
-            $data = NpsForms::create([
-                'title'     => $request->get('title'), 
-                'question'  => $request->get('question'), 
+            $nps_key = sha1(time()).str_random(5);
+            $data = NpsKey::create([
                 'user_id'   => Auth::user()->id,
+                'nps_code_key' => $nps_key, 
+                'nps_form_id'  => $request->get('nps_form')
                 ]);
             $request->session()->flash('status', 'success');
-            $request->session()->flash('msg', 'Nps form added successfully');
-            return redirect()->route('nps-forms.index');
+            $request->session()->flash('msg', 'Keys generated Successfully');
+            return redirect()->route('nps-key.index');
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Nps  $nps
+     * @param  \App\NpsKey  $npsKey
      * @return \Illuminate\Http\Response
      */
-    public function show(Nps $nps)
+    public function show(NpsKey $npsKey)
     {
         //
     }
@@ -76,10 +77,10 @@ class NpsFormsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Nps  $nps
+     * @param  \App\NpsKey  $npsKey
      * @return \Illuminate\Http\Response
      */
-    public function edit(Nps $nps)
+    public function edit(NpsKey $npsKey)
     {
         //
     }
@@ -88,10 +89,10 @@ class NpsFormsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Nps  $nps
+     * @param  \App\NpsKey  $npsKey
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Nps $nps)
+    public function update(Request $request, NpsKey $npsKey)
     {
         //
     }
@@ -99,10 +100,10 @@ class NpsFormsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Nps  $nps
+     * @param  \App\NpsKey  $npsKey
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Nps $nps)
+    public function destroy(NpsKey $npsKey)
     {
         //
     }

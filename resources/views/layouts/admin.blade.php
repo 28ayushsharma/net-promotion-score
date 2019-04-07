@@ -72,11 +72,22 @@
 						</li>
 						<li class="treeview">
 							<a href="{{ route('nps-forms.index')}}">
-								<i class="fa fa-dashboard"></i> <span>Create Nps</span>
+								<i class="fa  fa-plus-square-o"></i> <span>Create NPS</span>
 								<span class="pull-right-container"></span>
 							</a>
 						</li>
-						
+						<li class="treeview">
+							<a href="{{ route('email-nps.index')}}">
+								<i class="fa fa-envelope"></i> <span>Email NPS</span>
+								<span class="pull-right-container"></span>
+							</a>
+						</li>
+						<li class="treeview">
+							<a href="{{ route('nps-key.index')}}">
+								<i class="fa fa-key"></i> <span>NPS Keys</span>
+								<span class="pull-right-container"></span>
+							</a>
+						</li>
 					</ul>
 				</section>
 					<!-- /.sidebar -->
