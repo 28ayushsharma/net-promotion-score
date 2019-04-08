@@ -6,10 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
 use Auth,View,Hash;
+
 use App\User;
-use App\Clinic;
-use App\ClinicSlot;
-use App\UserExperience;
+use App\NpsCollection;
 
 class UserController extends Controller{
     /**
@@ -26,8 +25,15 @@ class UserController extends Controller{
      * @return view page
      */
     public function index(){
-        
-        return view('admin-panel.index');
+        $promotors = NpsCollection::where('user_id', Auth::id())->where("submitted_on","<>",null)
+        ->where("rating",">",8)->count();
+        $detractors = NpsCollection::where('user_id', Auth::id())->where("submitted_on","<>",null)
+        ->where("rating","<",7)->count();
+        $passives = NpsCollection::where('user_id', Auth::id())->where("submitted_on","<>",null)
+        ->where("rating",">",6)->where("rating","<",9)->count();
+
+        $total_nps = NpsCollection::where('user_id', Auth::id())->where("submitted_on","<>",null)->count();
+        return view('admin-panel.index',compact('promotors','detractors','passives','total_nps') );
     }
 
 

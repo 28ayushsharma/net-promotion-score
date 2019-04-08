@@ -6,15 +6,15 @@
 	</head>
 	<body>
 		<div class="container">
-			@if(!$is_filled)
+			@if(!$isAlreadyFilled)
             <form name="save_survey" method="post" action="{{ route('save_survey') }}">
                 {{ csrf_field() }}
                 <input type="hidden" name="survey_token" value="{{$survey_token}}">
                 <div >
-                    <h3>Customer Satisfaction Survey</h3>
+                    <h3>{{ $formData->title }}</h3>
                 </div>
                 <div >
-                    <p>How likely is it that you would recommend us to a friend or colleague?</p>
+                    <p>{{ $formData->question }}</p>
                     <div class="row-fluid">
                         <h4>
                             <span class="span1"><input type="radio" name="rating" value="0"> 0</span>

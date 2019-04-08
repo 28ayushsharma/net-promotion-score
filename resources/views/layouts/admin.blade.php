@@ -65,7 +65,7 @@
 					 <!-- sidebar menu: : style can be found in sidebar.less -->
 					<ul class="sidebar-menu">
 						<li class="treeview">
-							<a href="#">
+							<a href="{{ route('dashboard')}}">
 								<i class="fa fa-dashboard"></i> <span>Dashboard</span>
 								<span class="pull-right-container"></span>
 							</a>

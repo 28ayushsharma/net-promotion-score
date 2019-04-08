@@ -21,7 +21,6 @@ class EmailNpsController extends Controller
      */
     public function index()
     {
-
         $npsForms  = NpsForms::where('user_id', Auth::id())->pluck('title','id');
         return view('admin-panel.email_nps.index', compact('npsForms'));
     }
@@ -30,31 +29,33 @@ class EmailNpsController extends Controller
      * 
      */
     function emailedNps(Request $request,$survey_token){
-        $data = NpsCollection::where("survey_token", $survey_token)
-        ->where("submitted_on",null)
-        ->first();
-        $is_filled = false;
-        if(!empty($data)){
-            $is_filled = false;
-        }else{
-            $is_filled = true;
-        }
-        return view('nps_form',compact("survey_token","is_filled"));
+        $data = NpsCollection::where("survey_token", $survey_token)->first();
+        
+        $isAlreadyFilled = NpsCollection::where("email", $data->email)
+            ->where("submitted_on","<>",null)
+            ->where("nps_form_id",$data->nps_form_id)
+            ->where("user_id",$data->user_id)
+            ->count();
+      
+        $formData = NpsForms::find($data->nps_form_id);
+        return view('nps_form',compact("survey_token","isAlreadyFilled","formData"));
     }
 
     function saveSurvey(Request $request){
-        $data = NpsCollection::where("survey_token",$request->get("survey_token"))
-            ->where("submitted_on",null)
-            ->first();
-        if(!empty($data)){
-            $data->update([
-                "rating"  =>  $request->get("rating"),
-                "remark"  =>  $request->get("remark"),
-                "submitted_on"  =>  date("Y-m-d H:i:s")
-            ]);
+        if($request->method() == "POST"){
+            $data = NpsCollection::where("survey_token",$request->get("survey_token"))
+                ->where("submitted_on",null)
+                ->first();
+            if(!empty($data)){
+                $data->update([
+                    "rating"  =>  $request->get("rating"),
+                    "remark"  =>  $request->get("remark"),
+                    "submitted_on"  =>  date("Y-m-d H:i:s")
+                ]);
+            }
         }
-        $is_filled = true;
-        return view('nps_form',compact("is_filled"));
+        $isAlreadyFilled = true;
+        return view('nps_form',compact("isAlreadyFilled"));
     }
 
     /**
@@ -74,14 +75,16 @@ class EmailNpsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+        $inputArr = $request->all();
+         $inputArr["emails"] = array_map('trim', explode(',', $request->get("emails") ));
         $rules = [
             'nps_form'      => 'required',
             'emails'        => 'required|array|between:1,5'
             ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($inputArr, $rules);
 
-        $emails["email"] = array_map('trim', explode(',', $request->get("emails") ));
+        $emails["email"] = $inputArr["emails"];
         $emailValidator = Validator::make($emails, [
             'email.*' => 'email|unique:nps_collection,email, 0 ,id,nps_form_id,'.$request->get("nps_form").',user_id,'.Auth::id()
         ],[
@@ -95,7 +98,7 @@ class EmailNpsController extends Controller
                 return back()->withErrors($emailValidator)->withInput();
             }
         }else{
-            $emails = explode(",", $request->get("emails"));
+            $emails = $inputArr["emails"];
             if(count($emails) > 0){
                 foreach($emails as $email){
                     $survey_token = sha1(time()).str_random(5);
@@ -114,11 +117,11 @@ class EmailNpsController extends Controller
                     ]);
 
                     $link = $request->root().'/nps/'.$survey_token;
-                    
-                    // $data = array('link'=> $link );
-                    // Mail::send('emails.template', $data, function($message) use ($email) {
-                    //     $message->to($email)->subject('Net Promotion Survey');  
-                    // });
+                   
+                    $data = array('link'=> $link );
+                    Mail::send('emails.template', $data, function($message) use ($email) {
+                         $message->to($email)->subject('Net Promotion Survey');  
+                    });
                 }
             }
         }
@@ -168,6 +171,7 @@ class EmailNpsController extends Controller
                 "user_id"       => $keyData->user_id,
                 "nps_form_id"   => $keyData->nps_form_id,
                 "email"         => $request->get("email"),
+                "rating"         => $request->get("rating"),
                 "remark"         => $request->get("remark"),
                 "submitted_on"  =>  date("Y-m-d H:i:s"),
             ]);

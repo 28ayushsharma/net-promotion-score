@@ -27,7 +27,7 @@ Route::post('signup_save', 'UserController@save')->name('signup-save');
 Route::post('login', 'UserController@login')->name('login');
 
 Route::get('nps/{survey_token}', 'EmailNpsController@emailedNps')->name('code_nps');
-Route::post('nps_collection', 'EmailNpsController@saveSurvey')->name('save_survey');
+Route::any('nps_collection', 'EmailNpsController@saveSurvey')->name('save_survey');
 
 Route::middleware(['admin'])->group(function (){
     Route::get('dashboard', 'UserController@index')->name('dashboard');
