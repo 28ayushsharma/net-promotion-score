@@ -8,9 +8,8 @@
             <!-- small box -->
             <div class="small-box bg-green">
                 <div class="inner">
-                    <h3>{{ $promotors }}</h3>
-
-                    <p>Promoters</p>
+                    <h3>{{ $promotors_percentage }}<sup style="font-size: 20px">%</sup></h3>
+                    <p>Promoters --- {{$promotors}}</p>
                 </div>
             </div>
         </div>
@@ -19,9 +18,8 @@
             <!-- small box -->
             <div class="small-box bg-red">
                 <div class="inner">
-                    <h3>{{ $detractors }}</h3>
-{{-- <sup style="font-size: 20px">%</sup> --}}
-                    <p>Detractors</p>
+                    <h3>{{ $detractors_percentage }}<sup style="font-size: 20px">%</sup></h3>
+                    <p>Detractors --- {{$detractors}}</p>
                 </div>
               
             </div>
@@ -31,9 +29,9 @@
         
             <div class="small-box bg-yellow">
                 <div class="inner">
-                    <h3>{{ $passives }}</h3>
+                    <h3>{{ $passives_percentage }}<sup style="font-size: 20px">%</sup></h3>
 
-                    <p>Passives</p>
+                    <p>Passives --- {{$passives}}</p>
                 </div>
             </div>
         </div>

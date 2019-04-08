@@ -193,6 +193,11 @@ class EmailNpsController extends Controller
         //
     }
 
+    public function viewNps(){
+        $nps_collection = NpsCollection::where('user_id',Auth::id())->where("submitted_on","<>",null)->with('nps_form')->get();
+        return view('admin-panel.nps_collection', compact('nps_collection'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
