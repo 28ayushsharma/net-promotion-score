@@ -9,7 +9,8 @@
                     <h3 class="box-title"><b>NPS Collections</b></h3>
                 </div>
                 <!-- /.box-header -->
-                <form method="post">
+                <form method="post" action="{{ route('view_nps') }}">
+                {{ csrf_field() }}
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-4 form-group">
@@ -17,7 +18,12 @@
                         </div>
                         <div class="col-md-2">
                               <a href="#">
-                                  <button type="button" class="btn btn-block btn-primary">Search</button>
+                                  <button type="submit" class="btn btn-block btn-primary">Search</button>
+                              </a>
+                        </div>
+                        <div class="col-md-2">
+                              <a href="{{ route('view_nps') }}">
+                                  <button type="button" class="btn btn-block btn-warning">Reset</button>
                               </a>
                         </div>
                     </div>
@@ -58,7 +64,7 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="4">
+                                    <td colspan="6">
                                         <center> No Record Found </center>
                                     </td>
                                 </tr>

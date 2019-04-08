@@ -193,8 +193,16 @@ class EmailNpsController extends Controller
         //
     }
 
-    public function viewNps(){
-        $nps_collection = NpsCollection::where('user_id',Auth::id())->where("submitted_on","<>",null)->with('nps_form')->get();
+    public function viewNps(Request $request){
+        $query = NpsCollection::query();
+
+        $query->where('user_id',Auth::id())->where("submitted_on","<>",null)
+        ->with('nps_form');
+
+        if($request->get("email") != " "){
+            $query->where('email','like','%'.$request->get("email").'%');
+        }
+        $nps_collection = $query->get();
         return view('admin-panel.nps_collection', compact('nps_collection'));
     }
 

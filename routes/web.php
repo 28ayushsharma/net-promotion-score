@@ -34,7 +34,8 @@ Route::middleware(['admin'])->group(function (){
     Route::get('logout', 'UserController@logout')->name('logout');
 
 
-    Route::get('view-nps', 'EmailNpsController@viewNps')->name('view_nps');
+    Route::any('view-nps', 'EmailNpsController@viewNps')->name('view_nps');
+
     Route::resource('nps-forms', 'NpsFormsController');
     Route::resource('email-nps', 'EmailNpsController');
     Route::resource('nps-key', 'NpsKeyController');
