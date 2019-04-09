@@ -33,10 +33,14 @@ class UserController extends Controller{
         ->where("rating",">",6)->where("rating","<",9)->count();
 
         $total_nps = NpsCollection::where('user_id', Auth::id())->where("submitted_on","<>",null)->count();
-
-        $promotors_percentage = round(($promotors/$total_nps)*100,2);
-        $detractors_percentage = round(($detractors/$total_nps)*100,2);
-        $passives_percentage = round(($passives/$total_nps)*100,2);
+           $promotors_percentage = 0;
+            $detractors_percentage = 0;
+            $passives_percentage = 0;
+        if($total_nps != 0){
+            $promotors_percentage = round(($promotors/$total_nps)*100,2);
+            $detractors_percentage = round(($detractors/$total_nps)*100,2);
+            $passives_percentage = round(($passives/$total_nps)*100,2);
+        }
         return view('admin-panel.dashboard',compact('promotors','detractors','passives','total_nps','promotors_percentage','detractors_percentage','passives_percentage') );
     }
 
