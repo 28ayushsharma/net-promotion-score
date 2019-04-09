@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::post('get-widget', 'EmailNpsController@getWidget')->name('get_widget');
-Route::post('store-widget', 'EmailNpsController@storeWidget');
+Route::middleware(['cors'])->group(function () {
+    Route::any('get-widget', 'EmailNpsController@getWidget')->name('get_widget');
+    Route::any('store-widget', 'EmailNpsController@storeWidget');
+});

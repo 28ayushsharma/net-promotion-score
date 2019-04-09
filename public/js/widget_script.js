@@ -2,14 +2,12 @@
     * getting widget
     */
     function getWidget(nps_key){
-        fetch('http://localhost/net-promotion-score/public/api/get-widget',{
-            method: "POST",
+        fetch('http://28ayushsharma.epizy.com/public/api/get-widget?nps_key='+nps_key,{
+            method: "get",            
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                "Access-Control-Allow-Origin": "*"
-            },
-            body: JSON.stringify({"nps_key" : nps_key })
+                'Accept': 'text/plain',
+                'Content-Type': 'application/json'
+            }
         })
         .then(
             function(response) {
@@ -36,7 +34,7 @@
             return false;
         }
 
-        fetch("http://localhost/net-promotion-score/public/api/store-widget", {
+        fetch("http://28ayushsharma.epizy.com/public/api/store-widget", {
             method: 'post',
             headers: {
                 'Accept': 'application/json',

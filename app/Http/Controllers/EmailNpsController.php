@@ -134,8 +134,12 @@ class EmailNpsController extends Controller
 
     public function getWidget(Request $request){
         $nps_key      =   $request->get("nps_key");
-        $widgetData   =   NpsKey::where("nps_code_key",$nps_key)->with('nps_form')->first();
-        return view('widget', compact("widgetData"));
+        $widgetData   =   NpsKey::with('nps_form')->where("nps_code_key",$nps_key)->first();
+        if(empty($widgetData)){
+            return "Please check key.";
+        }
+        $html = view('widget', compact("widgetData"));
+        return $html;
     }
 
     /**
@@ -178,7 +182,7 @@ class EmailNpsController extends Controller
         }
         return response()->json([
             'status' => 200,
-            'msg'  => "Survey subbmitted successfully."
+            'msg'  => "Survey submitted successfully."
         ]);
     }
 
